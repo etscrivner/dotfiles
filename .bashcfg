@@ -1,0 +1,11 @@
+export PS1='\[\e[38;5;121;1m\]\u:\[\e[38;5;250;1m\]\w\[\e[38;5;119;1m\]$(vcprompt -f "(%b)")\[\e[0m\] \$ '
+
+export EDITOR="emacsclient -a vim -n "
+
+alias e="$EDITOR"
+alias E="SUDO_EDITOR=\"$EDITOR\" sudoedit"
+alias v="ls -lah"
+
+function hackon {
+         cd ~/Code/$1
+}
