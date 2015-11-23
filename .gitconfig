@@ -7,7 +7,7 @@
 	cb = checkout -b
 	fu = !git status --porcelain | grep '^??' | cut -c4- > .gitignore
         plr = pull --rebase
-        pu = git push origin HEAD
+        pu = push origin HEAD
 	ri = rebase -i
         s = status
         l = !git log --color --pretty=format:'%C(yellow)%h%C(reset) - %s %C(green)(%ar)%C(reset) %C(bold red)<%an>%C(reset)' | head -n 5
