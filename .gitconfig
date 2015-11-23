@@ -1,0 +1,15 @@
+[alias]
+        b = branch
+        bd = branch -d
+        kill = branch -D
+	c = commit -av
+        co = checkout
+	cb = checkout -b
+	fu = !git status --porcelain | grep '^??' | cut -c4- > .gitignore
+        plr = pull --rebase
+        pu = git push origin HEAD
+	ri = rebase -i
+        s = status
+        l = !git log --color --pretty=format:'%C(yellow)%h%C(reset) - %s %C(green)(%ar)%C(reset) %C(bold red)<%an>%C(reset)' | head -n 5
+[core]
+	editor = emacsclient -a vim

@@ -9,3 +9,13 @@ alias v="ls -lah"
 function hackon {
          cd ~/Code/$1
 }
+
+function start-venv {
+         if [ -d ./venv ]; then
+             source ./venv/bin/activate
+         fi
+}
+
+function stop-venv {
+         deactivate
+}
