@@ -1,4 +1,4 @@
-export PS1='\[\e[38;5;121;1m\]\u:\[\e[38;5;250;1m\]\w\[\e[38;5;119;1m\]$(vcprompt -M "**" -f "(%b%m)")\[\e[0m\] \$ '
+export PS1='\[\e[38;5;121;1m\]\u:\[\e[38;5;250;1m\]\w\[\e[38;5;119;1m\]$(vcprompt -M "**" -f "(%h|%b%m)")\[\e[0m\] \$ '
 
 export EDITOR="emacsclient -a vim -n "
 
@@ -7,15 +7,28 @@ alias E="SUDO_EDITOR=\"$EDITOR\" sudoedit"
 alias v="ls -lah"
 
 function hackon {
-         cd ~/Code/$1
+         # Find the shortest matching directory in the code folder
+         matching_folders=($(find ~/Code -name $1 -type d | awk '{print length, $0}' | sort -n -s | cut -d" " -f2-))
+         num_matches=${#matching_folders[@]}
+         if [ ${num_matches} -le 0 ]
+         then
+                >&2 echo "$FUNCNAME: cannot find '$1': No matching projects found."
+                return 1
+         else
+                cd ${matching_folders[0]}
+         fi
+         return 0
 }
 
 function start-venv {
          if [ -d ./venv ]; then
              source ./venv/bin/activate
+             return 0
          fi
+         return 1
 }
 
 function stop-venv {
          deactivate
+         return 0
 }
