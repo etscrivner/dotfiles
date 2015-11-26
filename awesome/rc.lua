@@ -290,6 +290,7 @@ batwidget_widget = lain.widgets.bat({
            battery_icon:set_widget(battery_ac_image)
         elseif bat_now.status == "Charging" then
            bat_header = "⚡ "
+           battery_icon:set_widget(battery_ac_image)
         elseif bat_now.status == "Discharging" then
            bat_header = "Bat "
            battery_icon:set_widget(battery_image)
@@ -310,10 +311,14 @@ batwidget_widget = lain.widgets.bat({
            markup_color = yellow
         elseif bat_p_num > 25 and bat_p_num <= 50 then
            markup_color = orange
-           batter_icon:set_widget(battery_low_image)
+           if bat_now.status ~= "Charging" then
+              battery_icon:set_widget(battery_low_image)
+           end
         elseif bat_p_num >= 0 and bat_p_num <= 25 then
            markup_color = red
-           batter_icon:set_widget(battery_empty_image)
+           if bat_now.status ~= "Charging" then
+              battery_icon:set_widget(battery_empty_image)
+           end
         end
 
         widget:set_markup(markup(markup_color, bat_header .. bat_p))
