@@ -10,7 +10,7 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
-
+local lain    = require("lain")
 -- Load Debian menu entries
 require("debian.menu")
 
@@ -42,6 +42,80 @@ end
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init("/usr/share/awesome/themes/zenburn/theme.lua")
+
+-- Theme customizations
+theme.icon_dir = os.getenv("HOME") .. "/.config/awesome/icons"
+theme.topbar = "png:" .. theme.icon_dir .. "/topbar/"
+
+theme.font = "Tamsyn 10.5"
+theme.taglist_font = "Tamsyn 10.5"
+
+theme.fg_normal = "#999999"
+theme.fg_focus = "#FFFFFF"
+theme.fg_urgent = "#CC9393"
+theme.bg_normal = "#242424"
+theme.bg_urgent = "#4CB7DB"
+theme.border_width = "1"
+theme.border_normal = "#252525"
+theme.border_focus = "#0099CC"
+theme.taglist_fg_focus = "#FFFFFF"
+theme.taglist_bg_focus = "png:" .. theme.icon_dir .. "/taglist_bg_focus.png"
+theme.tasklist_bg_normal = "#222222"
+theme.tasklist_bg_focus = "#187693"
+theme.tasklist_bg_focus = "png:" .. theme.icon_dir .. "/bg_focus_noline.png"
+theme.textbox_widget_margin_top = 1
+theme.awful_widget_height = 14
+theme.awful_widget_margin_top = 2
+theme.menu_height = "20"
+theme.menu_width = "300"
+
+theme.widget_bg                     = theme.icon_dir .. "/bg_focus_noline.png"
+theme.awesome_icon                  = theme.icon_dir .. "/awesome_icon.png"
+theme.vol_bg                        = theme.icon_dir .. "/vol_bg.png"
+theme.submenu_icon                  = theme.icon_dir .. "/submenu.png"
+theme.taglist_squares_sel           = theme.icon_dir .. "/square_sel.png"
+theme.taglist_squares_unsel         = theme.icon_dir .. "/square_unsel.png"
+theme.last                          = theme.icon_dir .. "/last.png"
+theme.spr                           = theme.icon_dir .. "/spr.png"
+theme.spr_small                     = theme.icon_dir .. "/spr_small.png"
+theme.spr_very_small                = theme.icon_dir .. "/spr_very_small.png"
+theme.spr_right                     = theme.icon_dir .. "/spr_right.png"
+theme.spr_bottom_right              = theme.icon_dir .. "/spr_bottom_right.png"
+theme.spr_left                      = theme.icon_dir .. "/spr_left.png"
+theme.bar                           = theme.icon_dir .. "/bar.png"
+theme.bottom_bar                    = theme.icon_dir .. "/bottom_bar.png"
+theme.mpd                           = theme.icon_dir .. "/mpd.png"
+theme.mpd_on                        = theme.icon_dir .. "/mpd_on.png"
+theme.prev                          = theme.icon_dir .. "/prev.png"
+theme.nex                           = theme.icon_dir .. "/next.png"
+theme.stop                          = theme.icon_dir .. "/stop.png"
+theme.pause                         = theme.icon_dir .. "/pause.png"
+theme.play                          = theme.icon_dir .. "/play.png"
+theme.clock                         = theme.icon_dir .. "/clock.png"
+theme.calendar                      = theme.icon_dir .. "/cal.png"
+theme.cpu                           = theme.icon_dir .. "/cpu.png"
+theme.net_up                        = theme.icon_dir .. "/net_up.png"
+theme.net_down                      = theme.icon_dir .. "/net_down.png"
+theme.widget_mail_notify            = theme.icon_dir .. "/mail_notify.png"
+
+theme.layout_tile                   = theme.icon_dir .. "/tile.png"
+theme.layout_tilegaps               = theme.icon_dir .. "/tilegaps.png"
+theme.layout_tileleft               = theme.icon_dir .. "/tileleft.png"
+theme.layout_tilebottom             = theme.icon_dir .. "/tilebottom.png"
+theme.layout_tiletop                = theme.icon_dir .. "/tiletop.png"
+theme.layout_fairv                  = theme.icon_dir .. "/fairv.png"
+theme.layout_fairh                  = theme.icon_dir .. "/fairh.png"
+theme.layout_spiral                 = theme.icon_dir .. "/spiral.png"
+theme.layout_dwindle                = theme.icon_dir .. "/dwindle.png"
+theme.layout_max                    = theme.icon_dir .. "/max.png"
+theme.layout_fullscreen             = theme.icon_dir .. "/fullscreen.png"
+theme.layout_magnifier              = theme.icon_dir .. "/magnifier.png"
+theme.layout_floating               = theme.icon_dir .. "/floating.png"
+
+theme.tasklist_disable_icon         = true
+theme.tasklist_floating             = ""
+theme.tasklist_maximized_horizontal = ""
+theme.tasklist_maximized_vertical   = ""
 
 -- This is used later as the default terminal and editor to run.
 terminal = "x-terminal-emulator"
@@ -85,10 +159,13 @@ end
 
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
-tags = {}
+tags = {
+   names = { " WEB ", " TERMINAL ", " FILES ", " MISC "},
+   layout = { layouts[3], layouts[3], layouts[3], layouts[3] }
+}
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
-    tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, layouts[1])
+    tags[s] = awful.tag(tags.names, s, tags.layout)
 end
 -- }}}
 
@@ -115,8 +192,73 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- }}}
 
 -- {{{ Wibox
+markup = lain.util.markup
+blue   = "#80CCE6"
+space3 = markup.font("Tamsyn 3", " ")
+space2 = markup.font("Tamsyn 2", " ")
+
 -- Create a textclock widget
-mytextclock = awful.widget.textclock("%m/%d/%Y %I:%S %p")
+mytextclock = awful.widget.textclock(markup("#FFFFFF", " %H:%M  "))
+clock_icon = wibox.widget.imagebox()
+clock_icon:set_image(beautiful.clock)
+clockwidget = wibox.widget.background()
+clockwidget:set_widget(mytextclock)
+clockwidget:set_bgimage(beautiful.widget_bg)
+
+-- Create a textclock calendar widget
+mycalendar = awful.widget.textclock(" %m/%d/%Y ")
+calendar_icon = wibox.widget.imagebox()
+calendar_icon:set_image(beautiful.calendar)
+calendarwidget = wibox.widget.background()
+calendarwidget:set_widget(mycalendar)
+calendarwidget:set_bgimage(beautiful.widget_bg)
+
+-- CPU
+cpu_widget = lain.widgets.cpu({
+    settings = function()
+        widget:set_markup(space3 .. "CPU " .. cpu_now.usage
+                          .. "%" .. markup.font("Tamsyn 5", " "))
+    end
+})
+cpuwidget = wibox.widget.background()
+cpuwidget:set_widget(cpu_widget)
+cpuwidget:set_bgimage(beautiful.widget_bg)
+cpu_icon = wibox.widget.imagebox()
+cpu_icon:set_image(beautiful.cpu)
+
+-- Network
+netdown_icon = wibox.widget.imagebox()
+netdown_icon:set_image(beautiful.net_down)
+netup_icon = wibox.widget.imagebox()
+netup_icon:set_image(beautiful.net_up)
+netwidget = lain.widgets.net({
+    settings = function()
+        widget:set_markup(markup.font("Tamsyn 1", " ") .. net_now.received .. " - "
+                          .. net_now.sent .. space2)
+    end
+})
+networkwidget = wibox.widget.background()
+networkwidget:set_widget(netwidget)
+networkwidget:set_bgimage(beautiful.widget_bg)
+
+-- Separators
+first = wibox.widget.textbox('<span font="Tamsyn 4"> </span>')
+last = wibox.widget.imagebox()
+last:set_image(beautiful.last)
+spr = wibox.widget.imagebox()
+spr:set_image(beautiful.spr)
+spr_small = wibox.widget.imagebox()
+spr_small:set_image(beautiful.spr_small)
+spr_very_small = wibox.widget.imagebox()
+spr_very_small:set_image(beautiful.spr_very_small)
+spr_right = wibox.widget.imagebox()
+spr_right:set_image(beautiful.spr_right)
+spr_bottom_right = wibox.widget.imagebox()
+spr_bottom_right:set_image(beautiful.spr_bottom_right)
+spr_left = wibox.widget.imagebox()
+spr_left:set_image(beautiful.spr_left)
+bar = wibox.widget.imagebox()
+bar:set_image(beautiful.bar)
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -186,19 +328,29 @@ for s = 1, screen.count() do
     mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
 
     -- Create the wibox
-    mywibox[s] = awful.wibox({ position = "top", screen = s })
+    mywibox[s] = awful.wibox({ position = "top", screen = s, height = 28 })
 
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
-    left_layout:add(mylauncher)
+    left_layout:add(first)
+    -- left_layout:add(mylauncher)
     left_layout:add(mytaglist[s])
+    left_layout:add(spr_small)
+    left_layout:add(mylayoutbox[s])
     left_layout:add(mypromptbox[s])
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
-    if s == 1 then right_layout:add(wibox.widget.systray()) end
-    right_layout:add(mytextclock)
-    right_layout:add(mylayoutbox[s])
+    -- if s == 1 then right_layout:add(wibox.widget.systray()) end
+    right_layout:add(netdown_icon)
+    right_layout:add(networkwidget)
+    right_layout:add(netup_icon)
+    right_layout:add(cpu_icon)
+    right_layout:add(cpuwidget)
+    right_layout:add(calendar_icon)
+    right_layout:add(calendarwidget)
+    right_layout:add(clock_icon)
+    right_layout:add(clockwidget)
 
     -- Now bring it all together (with the tasklist in the middle)
     local layout = wibox.layout.align.horizontal()
@@ -366,7 +518,7 @@ awful.rules.rules = {
       properties = { border_width = beautiful.border_width,
                      border_color = beautiful.border_normal,
                      focus = awful.client.focus.filter,
-                     raise = true,
+                     --raise = true,
                      keys = clientkeys,
                      buttons = clientbuttons } },
     { rule = { class = "MPlayer" },
