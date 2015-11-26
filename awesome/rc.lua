@@ -149,7 +149,7 @@ local layouts =
 
 -- {{{ Wallpaper
 -- Custom wallpaper
-beautiful.wallpaper = "/home/eric/Desktop/nico_delort.jpg"
+-- beautiful.wallpaper = "/home/eric/Desktop/nico_delort.jpg"
 if beautiful.wallpaper then
     for s = 1, screen.count() do
         gears.wallpaper.maximized(beautiful.wallpaper, s, true)
@@ -194,11 +194,15 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- {{{ Wibox
 markup = lain.util.markup
 blue   = "#80CCE6"
+green  = "#80E680"
+yellow = "#E6E680"
+orange = "#E6B380"
+red    = "#E68080"
 space3 = markup.font("Tamsyn 3", " ")
 space2 = markup.font("Tamsyn 2", " ")
 
 -- Create a textclock widget
-mytextclock = awful.widget.textclock(markup("#FFFFFF", " %H:%M  "))
+mytextclock = awful.widget.textclock(markup("#FFFFFF", " %I:%m %p    "))
 clock_icon = wibox.widget.imagebox()
 clock_icon:set_image(beautiful.clock)
 clockwidget = wibox.widget.background()
@@ -240,6 +244,41 @@ netwidget = lain.widgets.net({
 networkwidget = wibox.widget.background()
 networkwidget:set_widget(netwidget)
 networkwidget:set_bgimage(beautiful.widget_bg)
+
+-- Battery
+batwidget = lain.widgets.bat({
+    battery = "BAT1",
+    timeout = 1,
+    settings = function()
+        bat_header = " 🔋 Bat "
+        bat_p      = bat_now.perc .. "% "
+
+        if bat_now.status == "Charging" then
+            bat_header = " ⚡ Chg "
+        elseif bat_now.status == "Discharging" then
+            bat_header = " 🔋 Bat "
+        elseif bat_now.status == "Not present" then
+            bat_header = ""
+            bat_p      = ""
+        end
+
+        -- Change color based on percentage
+        markup_color = green
+        bat_p_num = tonumber(bat_now.perc)
+
+        if bat_p_num < 75 then
+            markup_color = yellow
+        elseif bat_p_num < 50 then
+            markup_color = orange
+        elseif bat_p_num < 25 then
+            markup_color = red
+        end
+
+        widget:set_markup(markup(markup_color, bat_header .. bat_p))
+    end
+})
+battery_icon = wibox.widget.imagebox()
+battery_icon:set_image(beautiful.battery)
 
 -- Separators
 first = wibox.widget.textbox('<span font="Tamsyn 4"> </span>')
@@ -342,6 +381,8 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     -- if s == 1 then right_layout:add(wibox.widget.systray()) end
+    right_layout:add(battery_icon)
+    right_layout:add(batwidget)
     right_layout:add(netdown_icon)
     right_layout:add(networkwidget)
     right_layout:add(netup_icon)
