@@ -6,18 +6,51 @@ alias e="$EDITOR"
 alias E="SUDO_EDITOR=\"$EDITOR\" sudoedit"
 alias v="ls -lah"
 
+
+function find_dirs_matching {
+    find $1 -name $2 -type d    
+}
+
+function sort_by_length {
+    awk '{print length, $0}' |
+    sort -n -s |
+    cut -d" " -f2-
+}
+
+function get_shortest_folder_matching {
+    local base_dir=$1
+    local pattern=$2
+    local matching_folders=($(find_dirs_matching $base_dir $pattern | sort_by_length))
+    local num_matches=${#matching_folders[@]}
+    if [ ${num_matches} -le 0 ]
+    then
+        return 1
+    else
+        echo "${matching_folders[0]}"
+    fi
+}
+
+function go_to_shortest_folder {
+    local func_name=$1
+    local base_dir=$2
+    local pattern=$3
+    local folder=$(get_shortest_folder_matching $base_dir $pattern)
+    if [ ! $folder ]
+    then
+        >&2 echo "$func_name: cannot find '$pattern': No matching projects found in '$base_dir'."
+    else
+        cd $folder
+    fi
+}
+
 function hackon {
-         # Find the shortest matching directory in the code folder
-         matching_folders=($(find ~/Code -name $1 -type d | awk '{print length, $0}' | sort -n -s | cut -d" " -f2-))
-         num_matches=${#matching_folders[@]}
-         if [ ${num_matches} -le 0 ]
-         then
-                >&2 echo "$FUNCNAME: cannot find '$1': No matching projects found."
-                return 1
-         else
-                cd ${matching_folders[0]}
-         fi
-         return 0
+    local pattern=$1
+    go_to_shortest_folder $FUNCNAME ~/Code $pattern
+}
+
+function workon {
+    local pattern=$1
+    go_to_shortest_folder $FUNCNAME ~/Work $pattern
 }
 
 function start-venv {
