@@ -49,7 +49,12 @@ function go_to_shortest_folder {
 
 function hackon {
     local pattern=$1
-    go_to_shortest_folder $FUNCNAME ~/Code $pattern
+    if [ -d ~/Code ]; then
+        local dirname=~/Code
+    else
+        local dirname=~/code
+    fi
+    go_to_shortest_folder $FUNCNAME $dirname $pattern
 }
 
 function workon {
