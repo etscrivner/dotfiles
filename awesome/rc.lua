@@ -71,6 +71,7 @@ theme.menu_width = "300"
 
 theme.widget_bg                     = theme.icon_dir .. "/bg_focus_noline.png"
 theme.awesome_icon                  = theme.icon_dir .. "/awesome_icon.png"
+theme.ac                            = theme.icon_dir .. "/ac.png"
 theme.vol_bg                        = theme.icon_dir .. "/vol_bg.png"
 theme.submenu_icon                  = theme.icon_dir .. "/submenu.png"
 theme.taglist_squares_sel           = theme.icon_dir .. "/square_sel.png"
@@ -94,6 +95,9 @@ theme.play                          = theme.icon_dir .. "/play.png"
 theme.clock                         = theme.icon_dir .. "/clock.png"
 theme.calendar                      = theme.icon_dir .. "/cal.png"
 theme.cpu                           = theme.icon_dir .. "/cpu.png"
+theme.battery                       = theme.icon_dir .. "/battery.png"
+theme.battery_low                   = theme.icon_dir .. "/battery_low.png"
+theme.battery_empty                 = theme.icon_dir .. "/battery_empty.png"
 theme.net_up                        = theme.icon_dir .. "/net_up.png"
 theme.net_down                      = theme.icon_dir .. "/net_down.png"
 theme.widget_mail_notify            = theme.icon_dir .. "/mail_notify.png"
@@ -160,8 +164,8 @@ end
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
 tags = {
-   names = { " WEB ", " TERMINAL ", " FILES ", " MISC "},
-   layout = { layouts[3], layouts[3], layouts[3], layouts[3] }
+   names = { " WEB ", " TERMINAL ", " CODE ", " MISC "},
+   layout = { layouts[3], layouts[3], layouts[3], layouts[1] }
 }
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
@@ -203,16 +207,22 @@ space2 = markup.font("Tamsyn 2", " ")
 
 -- Create a textclock widget
 mytextclock = awful.widget.textclock(markup("#FFFFFF", " %I:%m %p    "))
-clock_icon = wibox.widget.imagebox()
-clock_icon:set_image(beautiful.clock)
+clock_icon_widget = wibox.widget.imagebox()
+clock_icon_widget:set_image(beautiful.clock)
+clock_icon = wibox.widget.background()
+clock_icon:set_widget(clock_icon_widget)
+clock_icon:set_bgimage(beautiful.widget_bg)
 clockwidget = wibox.widget.background()
 clockwidget:set_widget(mytextclock)
 clockwidget:set_bgimage(beautiful.widget_bg)
 
 -- Create a textclock calendar widget
 mycalendar = awful.widget.textclock(" %m/%d/%Y ")
-calendar_icon = wibox.widget.imagebox()
-calendar_icon:set_image(beautiful.calendar)
+calendar_icon_widget = wibox.widget.imagebox()
+calendar_icon_widget:set_image(beautiful.calendar)
+calendar_icon = wibox.widget.background()
+calendar_icon:set_widget(calendar_icon_widget)
+calendar_icon:set_bgimage(beautiful.widget_bg)
 calendarwidget = wibox.widget.background()
 calendarwidget:set_widget(mycalendar)
 calendarwidget:set_bgimage(beautiful.widget_bg)
@@ -227,14 +237,23 @@ cpu_widget = lain.widgets.cpu({
 cpuwidget = wibox.widget.background()
 cpuwidget:set_widget(cpu_widget)
 cpuwidget:set_bgimage(beautiful.widget_bg)
-cpu_icon = wibox.widget.imagebox()
-cpu_icon:set_image(beautiful.cpu)
+cpu_icon_widget = wibox.widget.imagebox()
+cpu_icon_widget:set_image(beautiful.cpu)
+cpu_icon = wibox.widget.background()
+cpu_icon:set_widget(cpu_icon_widget)
+cpu_icon:set_bgimage(beautiful.widget_bg)
 
 -- Network
-netdown_icon = wibox.widget.imagebox()
-netdown_icon:set_image(beautiful.net_down)
-netup_icon = wibox.widget.imagebox()
-netup_icon:set_image(beautiful.net_up)
+netdown_icon_widget = wibox.widget.imagebox()
+netdown_icon_widget:set_image(beautiful.net_down)
+netdown_icon = wibox.widget.background()
+netdown_icon:set_widget(netdown_icon_widget)
+netdown_icon:set_bgimage(beautiful.widget_bg)
+netup_icon_widget = wibox.widget.imagebox()
+netup_icon_widget:set_image(beautiful.net_up)
+netup_icon = wibox.widget.background()
+netup_icon:set_widget(netup_icon_widget)
+netup_icon:set_bgimage(beautiful.widget_bg)
 netwidget = lain.widgets.net({
     settings = function()
         widget:set_markup(markup.font("Tamsyn 1", " ") .. net_now.received .. " - "
@@ -246,39 +265,68 @@ networkwidget:set_widget(netwidget)
 networkwidget:set_bgimage(beautiful.widget_bg)
 
 -- Battery
-batwidget = lain.widgets.bat({
+battery_ac_image = wibox.widget.imagebox()
+battery_ac_image:set_image(beautiful.ac)
+battery_image = wibox.widget.imagebox()
+battery_image:set_image(beautiful.battery)
+battery_low_image = wibox.widget.imagebox()
+battery_low_image:set_image(beautiful.battery_low)
+battery_empty_image = wibox.widget.imagebox()
+battery_empty_image:set_image(beautiful.battery_empty)
+
+battery_icon = wibox.widget.background()
+battery_icon:set_widget(battery_image)
+battery_icon:set_bgimage(beautiful.widget_bg)
+
+batwidget_widget = lain.widgets.bat({
     battery = "BAT1",
     timeout = 1,
     settings = function()
-        bat_header = " 🔋 Bat "
+        bat_header = ""
         bat_p      = bat_now.perc .. "% "
 
-        if bat_now.status == "Charging" then
-            bat_header = " ⚡ Chg "
+        if bat_now.status == "Full" or bat_now.status == "Unknown" then
+           bat_header = "Full "
+           battery_icon:set_widget(battery_ac_image)
+        elseif bat_now.status == "Charging" then
+           bat_header = "⚡ "
+           battery_icon:set_widget(battery_ac_image)
         elseif bat_now.status == "Discharging" then
-            bat_header = " 🔋 Bat "
+           bat_header = "Bat "
+           battery_icon:set_widget(battery_image)
         elseif bat_now.status == "Not present" then
-            bat_header = ""
-            bat_p      = ""
+           bat_header = ""
+           bat_p      = ""
         end
 
         -- Change color based on percentage
         markup_color = green
         bat_p_num = tonumber(bat_now.perc)
 
-        if bat_p_num < 75 then
-            markup_color = yellow
-        elseif bat_p_num < 50 then
-            markup_color = orange
-        elseif bat_p_num < 25 then
-            markup_color = red
+        if bat_p_num >= 100 then
+           markup_color = "#FFFFFF"
+        elseif bat_p_num > 75 and bat_p_num < 100 then
+           markup_color = green
+        elseif bat_p_num > 50 and bat_p_num <= 75 then
+           markup_color = yellow
+        elseif bat_p_num > 25 and bat_p_num <= 50 then
+           markup_color = orange
+           if bat_now.status ~= "Charging" then
+              battery_icon:set_widget(battery_low_image)
+           end
+        elseif bat_p_num >= 0 and bat_p_num <= 25 then
+           markup_color = red
+           if bat_now.status ~= "Charging" then
+              battery_icon:set_widget(battery_empty_image)
+           end
         end
 
         widget:set_markup(markup(markup_color, bat_header .. bat_p))
     end
 })
-battery_icon = wibox.widget.imagebox()
-battery_icon:set_image(beautiful.battery)
+batwidget = wibox.widget.background()
+batwidget:set_widget(batwidget_widget)
+batwidget:set_bgimage(beautiful.widget_bg)
 
 -- Separators
 first = wibox.widget.textbox('<span font="Tamsyn 4"> </span>')
@@ -360,6 +408,7 @@ for s = 1, screen.count() do
                            awful.button({ }, 3, function () awful.layout.inc(layouts, -1) end),
                            awful.button({ }, 4, function () awful.layout.inc(layouts, 1) end),
                            awful.button({ }, 5, function () awful.layout.inc(layouts, -1) end)))
+    
     -- Create a taglist widget
     mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, mytaglist.buttons)
 
