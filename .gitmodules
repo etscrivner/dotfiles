@@ -1,3 +1,6 @@
 [submodule "awesome/lain"]
 	path = awesome/lain
 	url = git@github.com:copycat-killer/lain.git
+[submodule "awesome/vicious-fbsd"]
+	path = awesome/vicious-fbsd
+	url = git@github.com:sarumont/vicious-fbsd
