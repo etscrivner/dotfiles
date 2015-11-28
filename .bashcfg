@@ -1,3 +1,6 @@
+export PATH=~/bin:$PATH
+export TERM='xterm-color'
+export LSCOLORS="FxfxcxdxCxegedabagacad"
 export PS1='\[\e[38;5;121;1m\]\u:\[\e[38;5;250;1m\]\w\[\e[38;5;119;1m\]$(vcprompt -M "**" -f "(%h|%b%m)")\[\e[0m\] \$ '
 
 export EDITOR="emacsclient -a vim -n "
@@ -5,6 +8,7 @@ export EDITOR="emacsclient -a vim -n "
 alias e="$EDITOR"
 alias E="SUDO_EDITOR=\"$EDITOR\" sudoedit"
 alias v="ls -lah"
+alias ls="ls -G"
 
 
 function find_dirs_matching {
