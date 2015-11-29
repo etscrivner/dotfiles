@@ -4,3 +4,6 @@
 [submodule "awesome/vicious-fbsd"]
 	path = awesome/vicious-fbsd
 	url = git@github.com:sarumont/vicious-fbsd
+[submodule ".emacs.d/third-party/Emacs-D-Mode"]
+	path = .emacs.d/third-party/Emacs-D-Mode
+	url = https://github.com/Emacs-D-Mode-Maintainers/Emacs-D-Mode.git
