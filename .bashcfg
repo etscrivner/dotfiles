@@ -59,7 +59,12 @@ function hackon {
 
 function workon {
     local pattern=$1
-    go_to_shortest_folder $FUNCNAME ~/Work $pattern
+    if [ -d ~/Work ]; then
+        local dirname=~/Work
+    else
+        local dirname=~/work
+    fi
+    go_to_shortest_folder $FUNCNAME $dirname $pattern
 }
 
 function start-venv {

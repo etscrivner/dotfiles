@@ -35,6 +35,7 @@ bindsym --release $mod+Shift+r restart
 
 # start a terminal
 bindsym $mod+Return exec i3-sensible-terminal
+# bindsym $mod+Return exec sakura
 
 # kill focused window
 bindsym $mod+Shift+c kill
@@ -55,14 +56,27 @@ bindsym $mod+k focus down
 bindsym $mod+l focus up
 bindsym $mod+semicolon focus right
 
+# split window vertically
+bindsym $mod+v splitv
+bindsym $mod+h splith
+bindsym $mod+f fullscreen
+
 # alternatively, you can use the cursor keys:
 bindsym $mod+Alt_R focus left
-bindsym $mod+Super_R focus down
+bindsym $mod+n focus down
 bindsym $mod+Print focus up
 
 # Editors and browsers
 bindsym --release $mod+Shift+e exec emacs
 bindsym --release $mod+Shift+w exec firefox
+
+# Workspaces
+bindsym $mod+1 workspace 1 www
+bindsym $mod+2 workspace 2 term
+bindsym $mod+3 workspace 3 code
+bindsym $mod+Shift+1 move container to workspace number 1 www
+bindsym $mod+Shift+2 move container to workspace number 2 term
+bindsym $mod+Shift+3 move container to workspace number 3 code
 
 # Status bar config
 bar {
