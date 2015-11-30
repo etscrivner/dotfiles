@@ -46,6 +46,12 @@
 ;; Don't blink that cursor
 (blink-cursor-mode -1)
 
+;; Overwrite selection when cutting and pasting
+(delete-selection-mode 1)
+
+;; Set the default fill column at 79 characters (not 72)
+(setq-default fill-column 79)
+
 ;; Add some space to the right of the line numbers displayed
 (defadvice linum-update-window (around linum-dynamic activate)
   (let* ((w (length (number-to-string
