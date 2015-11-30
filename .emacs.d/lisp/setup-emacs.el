@@ -12,11 +12,15 @@
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-;; Add third-party directory
+;; Special mode for d programming language
 (require 'd-mode)
+(autoload 'd-mode "D" "D Language" t)
+(add-to-list 'auto-mode-alist '("\\.d\\'" . d-mode))
 
 ;; Start the emacsclient server
-(server-start)
+(require 'server)
+(unless (server-running-p)
+  (server-start))
 
 ;; Get rid of the welcome screen
 (setq inhibit-startup-message t)
@@ -76,7 +80,7 @@
 ;; UTF-8 everywhere
 (setq locale-encoding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
+;;(set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 

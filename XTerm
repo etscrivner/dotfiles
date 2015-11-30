@@ -1,0 +1,6 @@
+XTerm*Background: grey12
+XTerm*Foreground: white
+XTerm*faceName: Inconsolata:size=16:antialias=true
+XTerm*saveLines: 1000
+XTerm*HiForeColor: white
+XTerm*HiBackColor: #c06077
