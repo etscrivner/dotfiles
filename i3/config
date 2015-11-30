@@ -69,6 +69,7 @@ bindsym $mod+Print focus up
 # Editors and browsers
 bindsym --release $mod+Shift+e exec emacs
 bindsym --release $mod+Shift+w exec firefox
+bindsym --release $mod+Shift+g exec gorilla
 
 # Workspaces
 bindsym $mod+1 workspace 1 www
@@ -78,7 +79,14 @@ bindsym $mod+Shift+1 move container to workspace number 1 www
 bindsym $mod+Shift+2 move container to workspace number 2 term
 bindsym $mod+Shift+3 move container to workspace number 3 code
 
+# Password gorilla window should float
+for_window [class="Gorilla"] floating enable
+
 # Status bar config
 bar {
-	status_command i3status
+	status_command i3status -c ~/.i3status
+        colors {
+               background #333333
+               statusline #AAAAAA
+        }
 }

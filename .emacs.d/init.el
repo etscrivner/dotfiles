@@ -18,6 +18,6 @@
 (let ((dotfiles-dir (get-dotfiles-directory)))
   (add-recursively-to-load-path "third-party" dotfiles-dir)
   (add-recursively-to-load-path "lisp" dotfiles-dir))
-
+(require 'semantic/db)
 ;; Kick-off overall setup
 (require 'setup-emacs)
