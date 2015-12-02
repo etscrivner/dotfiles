@@ -22,6 +22,10 @@
 (unless (server-running-p)
   (server-start))
 
+;; Helm mode
+(require 'async)
+(require 'helm-config)
+
 ;; Get rid of the welcome screen
 (setq inhibit-startup-message t)
 
@@ -106,6 +110,8 @@
 (set-face-background 'highlight "#333")
 (set-face-underline 'highlight nil)
 
+;; Bind key for replacing a rectangle
+(global-set-key (kbd "C-c c r") 'replace-rectangle)
 
 (provide 'setup-emacs)
 ;;; setup-emacs.el ends here

@@ -10,9 +10,18 @@ alias E="SUDO_EDITOR=\"$EDITOR -a vim -n \" sudoedit"
 alias v="ls -lah"
 alias ls="ls -G"
 
+#
+# GIT AUTOCOMPLETION
+#
+source ~/git-completion.bash
+
+#
+# CUSTOM FUNCTION
+#
+
 
 function find_dirs_matching {
-    find $1 -name $2 -type d    
+    find $1 -name *.git* -prune -o -name $2 -type d
 }
 
 function sort_by_length {

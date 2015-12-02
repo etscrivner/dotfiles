@@ -7,3 +7,12 @@
 [submodule ".emacs.d/third-party/Emacs-D-Mode"]
 	path = .emacs.d/third-party/Emacs-D-Mode
 	url = https://github.com/Emacs-D-Mode-Maintainers/Emacs-D-Mode.git
+[submodule ".emacs.d/third-party/icicles"]
+	path = .emacs.d/third-party/icicles
+	url = git@github.com:emacsmirror/icicles.git
+[submodule ".emacs.d/third-party/helm"]
+	path = .emacs.d/third-party/helm
+	url = git@github.com:emacs-helm/helm.git
+[submodule ".emacs.d/third-party/emacs-async"]
+	path = .emacs.d/third-party/emacs-async
+	url = https://github.com/jwiegley/emacs-async.git
