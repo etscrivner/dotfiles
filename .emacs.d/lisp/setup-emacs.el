@@ -113,5 +113,9 @@
 ;; Bind key for replacing a rectangle
 (global-set-key (kbd "C-c c r") 'replace-rectangle)
 
+
+;; All targeted configuration
+(require 'setup-python)
+
 (provide 'setup-emacs)
 ;;; setup-emacs.el ends here
