@@ -18,6 +18,17 @@
 (let ((dotfiles-dir (get-dotfiles-directory)))
   (add-recursively-to-load-path "third-party" dotfiles-dir)
   (add-recursively-to-load-path "lisp" dotfiles-dir))
-(require 'semantic/db)
+
+;; Additional package repositories
+(require 'package) ;; You might already have this line
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(when (< emacs-major-version 24)
+  ;; For important compatibility libraries like cl-lib
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+
+(package-initialize) ;; You might already have this line
+
+
 ;; Kick-off overall setup
 (require 'setup-emacs)

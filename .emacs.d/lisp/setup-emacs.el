@@ -113,6 +113,12 @@
 ;; Bind key for replacing a rectangle
 (global-set-key (kbd "C-c c r") 'replace-rectangle)
 
+;; Semantic mode
+(require 'semantic/db)
+
+;; Flycheck
+(require 'flycheck)
+(add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;; All targeted configuration
 (require 'setup-python)

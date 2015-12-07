@@ -16,6 +16,3 @@
 [submodule ".emacs.d/third-party/emacs-async"]
 	path = .emacs.d/third-party/emacs-async
 	url = https://github.com/jwiegley/emacs-async.git
-[submodule ".emacs.d/third-party/flycheck"]
-	path = .emacs.d/third-party/flycheck
-	url = git@github.com:flycheck/flycheck.git
