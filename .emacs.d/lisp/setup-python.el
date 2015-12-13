@@ -3,8 +3,29 @@
 ;;; Commentary:
 ;;;     Contains various python-specific configurations
 ;;;
+(require 'python)
 
 ;;; Code:
+
+;;; Docstring fill style
+(setq python-fill-docstring-style 'pep-257-nn)
+
+;;; Use ipython, when available, instead of python
+(when (executable-find "ipython")
+  (setq python-shell-interpreter "ipython"))
+
+;;; Python helper function
+(defun str-replace (str match replace)
+  "Replace STR occurences of MATCH with REPLACE."
+  (mapconcat 'identity (split-string str match) replace))
+
+(defun convert-path-to-python-module (path module-root)
+  "Convert filesystem PATH to a python module name, starting at MODULE-ROOT."
+  (let ((path-parts (split-string path (concat module-root "/"))))
+    (if (> (length path-parts) 1)
+        (str-replace
+         (str-replace (cadr path-parts) "/" ".") ".py" "")
+      "")))
 
 ;;; Code generation for basic python file boiler-plate
 (define-skeleton python-skeleton--test-file
@@ -40,9 +61,12 @@
   "# -*- coding: utf-8 -*-\n"
   "\"\"\"\n"
   "    "
-  (let ((module-name (skeleton-read " Module name:")))
+  (let* ((default-module-name (convert-path-to-python-module (buffer-file-name) "realtimeparking"))
+         (raw-module-name (skeleton-read (concat " Module name (Default " default-module-name  "):")))
+         (module-name (if (string= "" raw-module-name) default-module-name raw-module-name)))
     (concat
-     module-name "\n"
+     module-name
+     "\n"
      "    " (make-string (string-width module-name) ?~)))
   "\n"
   "    MODULE DESCRIPTION\n"
