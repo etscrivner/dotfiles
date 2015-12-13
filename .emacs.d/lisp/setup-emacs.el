@@ -58,6 +58,7 @@
 
 ;; Add some space to the right of the line numbers displayed
 (defadvice linum-update-window (around linum-dynamic activate)
+  "Customize line-number formatting."
   (let* ((w (length (number-to-string
 		     (count-lines (point-min) (point-max)))))
 	 (linum-format (concat "%" (number-to-string w) "d ")))
@@ -84,6 +85,9 @@
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'forward)
 
+;; Automatically reload buffers that have changed on disk
+(global-auto-revert-mode t)
+
 ;; Electric pair mode
 (electric-pair-mode 1)
 
@@ -100,7 +104,9 @@
  '(custom-enabled-themes (quote (wombat))))
 
 ;; Bump up the font size a bit and use a prettier face
-(cond ((member "Inconsolata" (font-family-list))
+(cond ((member "Monoid" (font-family-list))
+       (set-face-attribute 'default nil :height 130 :font "Monoid"))
+      ((member "Inconsolata" (font-family-list))
        (set-face-attribute 'default nil :height 180 :font "Inconsolata"))
       (t (set-face-attribute 'default nil :height 180)))
 
@@ -110,8 +116,15 @@
 (set-face-background 'highlight "#333")
 (set-face-underline 'highlight nil)
 
+;; (Un)comment region
+(global-set-key (kbd "C-c c c") 'comment-region)
+(global-set-key (kbd "C-c c u") 'uncomment-region)
+
 ;; Bind key for replacing a rectangle
 (global-set-key (kbd "C-c c r") 'replace-rectangle)
+
+;; Duplicate whole line
+(global-set-key (kbd "C-c C-d") (kbd "C-a C-SPC C-n M-w C-y C-p C-e"))
 
 ;; Semantic mode
 (require 'semantic/db)
@@ -119,6 +132,19 @@
 ;; Flycheck
 (require 'flycheck)
 (add-hook 'after-init-hook #'global-flycheck-mode)
+
+;; Persp-mode
+(require 'persp-mode)
+(with-eval-after-load "persp-mode-autoloads"
+  (setq wg-morph-on nil)
+  (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
+
+;; Projectile helm
+(global-set-key (kbd "C-c p h") 'helm-projectile)
+(global-set-key (kbd "C-c h i") 'helm-semantic-or-imenu)
+(global-set-key (kbd "C-c h o") 'helm-occur)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(setq helm-M-x-fuzzy-match t)
 
 ;; All targeted configuration
 (require 'setup-python)

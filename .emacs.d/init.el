@@ -1,3 +1,10 @@
+;;; init.el --- The emacs configuration entry-point
+;;;
+;;; Commentary:
+;;;     This is the first file executed when emacs is initialized.
+;;;
+
+;;; Code:
 ;; Determine our dotfiles directory
 (defun get-dotfiles-directory ()
   "Returns the directory the Emacs dotfiles are in."
@@ -19,16 +26,8 @@
   (add-recursively-to-load-path "third-party" dotfiles-dir)
   (add-recursively-to-load-path "lisp" dotfiles-dir))
 
-;; Additional package repositories
-(require 'package) ;; You might already have this line
-(add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(when (< emacs-major-version 24)
-  ;; For important compatibility libraries like cl-lib
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-
-(package-initialize) ;; You might already have this line
-
-
 ;; Kick-off overall setup
+(require 'setup-packages)
 (require 'setup-emacs)
+
+;;; init.el ends here
