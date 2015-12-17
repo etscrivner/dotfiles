@@ -13,7 +13,7 @@
   '(flycheck
     projectile
     helm-projectile
-    persp-mode))
+    perspective))
 
 ;;; Add additional package archives (try to use stable ones)
 (add-to-list 'package-archives

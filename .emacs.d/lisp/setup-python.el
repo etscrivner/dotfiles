@@ -76,5 +76,26 @@
   " ParkMe Inc. All Rights Reserved\n"
   "\"\"\"\n")
 
+;; Run unit-tests
+(defun run-unit-tests (root-directory test-command)
+  "Change to ROOT-DIRECTORY and run TEST-COMMAND."
+  (interactive)
+  (let ((default-directory root-directory))
+    (with-output-to-temp-buffer "*unit-tests*"
+      (shell-command test-command "*unit-tests*"))
+    (pop-to-buffer "*unit-tests*")
+    (end-of-buffer)))
+
+(defun run-webframework-tests ()
+  "Run webframework project tests."
+  (interactive)
+  (run-unit-tests "~/code/python/web-framework/" "python setup.py test"))
+
+(defun python-mode-custom-configs ()
+  "Custom python mode hooks."
+  (local-set-key (kbd "C-c c t") 'run-webframework-tests)
+  (semantic-mode 1))
+(add-hook 'python-mode-hook 'python-mode-custom-configs)
+
 (provide 'setup-python)
 ;;; setup-python.el ends here

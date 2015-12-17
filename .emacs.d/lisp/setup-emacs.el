@@ -12,19 +12,10 @@
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-;; Special mode for d programming language
-(require 'd-mode)
-(autoload 'd-mode "D" "D Language" t)
-(add-to-list 'auto-mode-alist '("\\.d\\'" . d-mode))
-
 ;; Start the emacsclient server
 (require 'server)
 (unless (server-running-p)
   (server-start))
-
-;; Helm mode
-(require 'async)
-(require 'helm-config)
 
 ;; Get rid of the welcome screen
 (setq inhibit-startup-message t)
@@ -104,11 +95,16 @@
  '(custom-enabled-themes (quote (wombat))))
 
 ;; Bump up the font size a bit and use a prettier face
-(cond ((member "Monoid" (font-family-list))
-       (set-face-attribute 'default nil :height 130 :font "Monoid"))
-      ((member "Inconsolata" (font-family-list))
-       (set-face-attribute 'default nil :height 180 :font "Inconsolata"))
-      (t (set-face-attribute 'default nil :height 180)))
+(when (display-graphic-p)
+  (cond ((member "Monoid" (font-family-list))
+         (set-face-attribute 'default nil :height 130 :font "Monoid"))
+        ((member "Inconsolata" (font-family-list))
+         (set-face-attribute 'default nil :height 170 :font "Inconsolata"))
+        (t (set-face-attribute 'default nil :height 180))))
+
+;; Handle backspace triggering help in terminal
+(when (not (display-graphic-p))
+  (normal-erase-is-backspace-mode 1))
 
 ;; Customize hl-line-mode coloring. This needs to come after
 ;; configuring theming as some themes override these settings.
@@ -134,17 +130,30 @@
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;; Persp-mode
-(require 'persp-mode)
-(with-eval-after-load "persp-mode-autoloads"
-  (setq wg-morph-on nil)
-  (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
+;; (require 'persp-mode)
+;;(with-eval-after-load "persp-mode-autoloads"
+;; (setq wg-morph-on nil)
+;;  (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
 
-;; Projectile helm
+;; Projectile mode
+(projectile-global-mode)
+
+;; Helm mode
+(require 'async)
+(require 'helm-config)
+(require 'helm-projectile)
+(helm-projectile-on)
+
 (global-set-key (kbd "C-c p h") 'helm-projectile)
 (global-set-key (kbd "C-c h i") 'helm-semantic-or-imenu)
 (global-set-key (kbd "C-c h o") 'helm-occur)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "M-x") 'helm-M-x)
-(setq helm-M-x-fuzzy-match t)
+
+;; Special mode for d programming language
+(require 'd-mode)
+(autoload 'd-mode "D" "D Language" t)
+(add-to-list 'auto-mode-alist '("\\.d\\'" . d-mode))
 
 ;; All targeted configuration
 (require 'setup-python)

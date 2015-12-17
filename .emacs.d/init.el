@@ -26,6 +26,9 @@
   (add-recursively-to-load-path "third-party" dotfiles-dir)
   (add-recursively-to-load-path "lisp" dotfiles-dir))
 
+;; Restclient mode
+(require 'restclient)
+
 ;; Kick-off overall setup
 (require 'setup-packages)
 (require 'setup-emacs)

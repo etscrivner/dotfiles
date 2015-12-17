@@ -1,7 +1,13 @@
-XTerm*Background: grey12
+XTerm*Background: black
 XTerm*Foreground: white
-XTerm*faceName: Inconsolata:size=16:antialias=true
-XTerm*saveLines: 1000
 XTerm*selectToClipboard: true
+XTerm*faceName: Inconsolata Regular:size=16:antialias=true
+XTerm*saveLines: 1000
 XTerm*HiForeColor: white
 XTerm*HiBackColor: #c06077
+XTerm*fastScroll: true
+XTerm*metaSendsEscape: true
+XTerm*locale: true
+XTerm*utf8: 1
+XTerm*charClass: 33:48,36-47:48,58-59:48,61:48,63-64:48,95:48,126:48
+XTerm*on3Clicks: regex ([[:alnum:]!#+,./=?@_~-])+
